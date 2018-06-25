@@ -36,9 +36,9 @@ sub vcl_recv {
 
 sub vcl_miss {
     if (req.backend == prerender) {
-        set bereq.http.Host = "service.prerender.io";
-        set bereq.http.X-Real-IP = client.ip;
-        set bereq.http.X-Forwarded-For = client.ip;
+        set req.http.Host = "service.prerender.io";
+        set req.http.X-Real-IP = client.ip;
+        set req.http.X-Forwarded-For = client.ip;
 
         # If you're using hosted prerender.io, set your token here to enable
         # stat collection.
@@ -49,7 +49,7 @@ sub vcl_miss {
         # FIXME: This would ideally be handled via environment variables.
         # I don't think that environment variables are available in Varnish.
         # I'm looking into it.
-        set bereq.http.X-Prerender-Token = std.fileread("/etc/varnish/prerender_token.txt");
+        set req.http.X-Prerender-Token = std.fileread("/etc/varnish/prerender_token.txt");
     }
 }
 
